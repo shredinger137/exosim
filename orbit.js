@@ -112,13 +112,12 @@ var canvas = document.getElementById("renderCanvas"); // Get the canvas element
             engine.resize();
     });
 
-// Create a canvas that extends the entire screen
-// and it will draw righet\\t over the other html elements, like buttons, etc
 var canvas2 = document.getElementById("overlayCanvas");
 
 document.body.appendChild(canvas2);
 
-//Then you can draw a point at (10,10) like this:
 
 var ctx = canvas2.getContext("2d");
 ctx.fillRect(10,10,10,10);
+
+//use this canvas to overlay a curve graph and other elements
