@@ -150,22 +150,32 @@ var totalPoints = 1;
 var prevx = 0;
 var prevy = 0;
 var firstRun = true;
+var pointsArray = [];
+var yaxis = [];
+for(var i=1; i<=130; i++){
+    if(i%5 == 0){
+        yaxis.push(i);
+    } else {yaxis.push('');}
+    
+}
 
+var minGraph = (1 - (2 * maxLoss)) * 100;
+console.log("minGraph: " + minGraph);
 
 function graphPoint(occlusion){
 
     ctx.fillStyle = 'black';
     var pointy = Math.round(((occlusion * 100000)));
+    pointsArray.push((1 - occlusion) * 100);
     pointy = pointy + yoffset;
     var pointx = 200 + (totalPoints * pointSeparation);
-    
-    console.log("pointx: " + pointx + ", pointy: " + pointy);
     var newy = pointy + yoffset;
-    console.log("pointy with offset: " + newy);
-    if(pointx < document.width);
+    if(pointx < 130);
     ctx.fillRect(pointx, pointy, pointSize, pointSize);
     totalPoints = totalPoints + 1;
-
+    //yaxis.push(totalPoints);
+    myChart.update();
+    console.log("Charts: " + pointsArray);
     if(!firstRun){
     ctx.beginPath();
     ctx.moveTo(prevx, prevy);
@@ -177,6 +187,60 @@ function graphPoint(occlusion){
     firstRun = false;
 
 }
+
+var ctc = document.getElementById('chartCanvas').getContext('2d');
+ctc.height = 600;
+var myChart = new Chart(ctc, {
+    type: 'line',
+    data: {
+        labels: yaxis,
+        datasets: [{
+            label: 'Light',
+            data: pointsArray,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        legend: {
+            display: false
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    min: minGraph,
+                    max: 100,
+                    stepsize: .001
+                }
+            }],
+            xAxes: [{
+                ticks: {
+                    min: 0,
+                    max: 100,
+                    stepsize: 1
+                }
+            }]
+        },
+        animation: false
+    }
+},);
 
 
 }
