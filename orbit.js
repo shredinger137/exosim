@@ -47,22 +47,6 @@ var canvas = document.getElementById("renderCanvas"); // Get the canvas element
             camera.setPosition(new BABYLON.Vector3(0, 0, newCameraZ));
         }
 
-        //GUI
-        var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("myUI");
-        var rect1 = new BABYLON.GUI.Rectangle();
-        rect1.width = 0.2;
-        rect1.height = "200px";
-        rect1.cornerRadius = 20;
-        rect1.color = "black";
-        rect1.thickness = 4;
-        rect1.background = "black";
-        rect1.position = new BABYLON.Vector3(-1.4,-2,6);
-        rect1.horizontalAlignment = "left";
-        rect1.top = "160px";
-        rect1.paddingLeft = "20px";
-        advancedTexture.addControl(rect1);    
-
-
         // sun sphere
         var sun = BABYLON.Mesh.CreateSphere("sun", 32, sundiam, scene);
         sun.position = new BABYLON.Vector3(0, 0, 0);
@@ -153,30 +137,44 @@ var ctx = canvas2.getContext("2d");
 ctx.canvas.width  = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
 
+//create graph base
+
+var yoffset = window.innerHeight - 370;
+
+ctx.fillStyle = 'rgba(255, 255, 255, .1)';
+ctx.fillRect(150, window.innerHeight - 400, window.innerWidth - 300, 200);
+
 var pointSeparation = 6;
 var pointSize = 3;
 var totalPoints = 1;
 var prevx = 0;
 var prevy = 0;
-
+var firstRun = true;
 
 
 function graphPoint(occlusion){
 
-    var pointy = ((occlusion * 100000)).toFixed(0);
-    var pointx = (totalPoints * pointSeparation);
+    ctx.fillStyle = 'black';
+    var pointy = Math.round(((occlusion * 100000)));
+    pointy = pointy + yoffset;
+    var pointx = 200 + (totalPoints * pointSeparation);
+    
     console.log("pointx: " + pointx + ", pointy: " + pointy);
+    var newy = pointy + yoffset;
+    console.log("pointy with offset: " + newy);
     if(pointx < document.width);
     ctx.fillRect(pointx, pointy, pointSize, pointSize);
     totalPoints = totalPoints + 1;
 
+    if(!firstRun){
     ctx.beginPath();
     ctx.moveTo(prevx, prevy);
     ctx.lineTo(pointx, pointy);
     ctx.stroke();
-
+}
     prevx = pointx;
     prevy = pointy;
+    firstRun = false;
 
 }
 
